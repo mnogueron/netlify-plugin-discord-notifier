@@ -74,4 +74,4 @@ package = "netlify-plugin-discord-notifier"
 | showLogs           | Boolean   |                                                                                                                |
 | customWebhookKey   | String    | Use it for custom env variable key (e.g. defining different webhook per event type)                            |
 
-A default configuration is provided for each event (e.g. disabling notification for preDev and dev events) and available in [config.js](/src/config.js).
+A default configuration is provided for each event (e.g. disabling notification for preDev and dev events) and available in [config.ts](/src/config.ts).

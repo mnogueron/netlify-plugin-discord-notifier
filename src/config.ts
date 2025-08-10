@@ -1,4 +1,6 @@
-export const getConfig = (inputs) => {
+import { Config, Inputs } from "./types.js";
+
+export const getConfig = (inputs: Inputs): Config => {
   return {
     bot: {
       username: "Netlify",

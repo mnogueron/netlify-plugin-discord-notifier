@@ -2,11 +2,13 @@
   "name": "netlify-plugin-discord-notifier",
   "version": "1.0.0",
   "description": "Netlify build plugin - Send build notifications to Discord",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "watch": "tsc -w"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
@@ -20,7 +22,7 @@
   ],
   "files": [
     "manifest.yml",
-    "src"
+    "dist"
   ],
   "author": "Matthieu Nogueron <matthieu.nogueron@gmail.com>",
   "license": "MIT",
@@ -41,12 +43,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/node": "^24.2.1",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0"
   }
 }

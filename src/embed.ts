@@ -1,11 +1,12 @@
 import { format } from "date-fns";
+import { EventConfig } from "./types.js";
 
 const getRepositoryUrl = () =>
-  process.env["REPOSITORY_URL"].replace(/git@(github.com):/, "https://$1/");
+  process.env["REPOSITORY_URL"]?.replace(/git@(github.com):/, "https://$1/");
 
-const getCommitUrl = (sha) => `${getRepositoryUrl()}/commit/${sha}`;
+const getCommitUrl = (sha: string) => `${getRepositoryUrl()}/commit/${sha}`;
 
-const getDiffUrl = (head, commitSha) =>
+const getDiffUrl = (head: string, commitSha: string) =>
   `${getRepositoryUrl()}/compare/${head}...${commitSha}`;
 
 const getAppUrl = () => {
@@ -19,13 +20,13 @@ const getDeployUrl = () => {
 };
 
 // TODO add support for string templating in raw string config (variable injection)
-const getDescription = (statusConfig) => {
+const getDescription = (statusConfig: EventConfig) => {
   return `[${
     process.env["SITE_NAME"]
   }](${getDeployUrl()}) ${statusConfig.status} at ${format(new Date(), "HH:mm:ss")}.`;
 };
 
-const getFields = (statusConfig) => {
+const getFields = (statusConfig: EventConfig) => {
   return [
     statusConfig.showBuildId && {
       name: "Build ID",
@@ -42,14 +43,14 @@ const getFields = (statusConfig) => {
     statusConfig.showCommit && {
       name: "Deployed Commit",
       value: `[${process.env["COMMIT_REF"]}](${getCommitUrl(
-        process.env["COMMIT_REF"],
+        process.env["COMMIT_REF"] || "",
       )})`,
     },
     statusConfig.showDiff && {
       name: "Diff",
       value: getDiffUrl(
-        process.env["CACHED_COMMIT_REF"],
-        process.env["COMMIT_REF"],
+        process.env["CACHED_COMMIT_REF"] || "",
+        process.env["COMMIT_REF"] || "",
       ),
     },
     statusConfig.showLogs && {
@@ -59,7 +60,7 @@ const getFields = (statusConfig) => {
   ].filter(Boolean);
 };
 
-export const getEmbed = (statusConfig) => {
+export const getEmbed = (statusConfig: EventConfig) => {
   return {
     url: getAppUrl(),
     color: statusConfig.color,
