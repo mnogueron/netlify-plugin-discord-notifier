@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const axios = require('axios');
-const {format} = require('date-fns');
+import axios from 'axios';
+import {format} from 'date-fns';
 
-const BuildStatus = {
+export const BuildStatus = {
   SUCCESS: 'success',
   ERROR: 'error',
 };
@@ -80,7 +79,7 @@ const getPayload = buildStatus => {
   };
 };
 
-const Discord = {
+export const Discord = {
   sendBuildReport: async (buildStatus, utils) => {
     try {
       const webhook = process.env['DISCORD_WEBHOOK_URL'];
@@ -102,9 +101,4 @@ const Discord = {
       console.error(err);
     }
   },
-};
-
-module.exports = {
-  Discord,
-  BuildStatus,
 };
