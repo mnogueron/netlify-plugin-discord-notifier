@@ -1,31 +1,31 @@
-import axios from 'axios';
-import {format} from 'date-fns';
+import axios from "axios";
+import { format } from "date-fns";
 
 export const BuildStatus = {
-  SUCCESS: 'success',
-  ERROR: 'error',
+  SUCCESS: "success",
+  ERROR: "error",
 };
 
 const netlify = {
-  name: 'Netlify',
-  logo: 'https://www.netlify.com/v3/static/favicon/icon-512.png',
-  url: 'https://app.netlify.com',
-  appUrl: `https://app.netlify.com/sites/${process.env['SITE_NAME']}`,
+  name: "Netlify",
+  logo: "https://www.netlify.com/v3/static/favicon/icon-512.png",
+  url: "https://app.netlify.com",
+  appUrl: `https://app.netlify.com/sites/${process.env["SITE_NAME"]}`,
 };
 
-const getCommitUrl = sha => `${process.env['REPOSITORY_URL']}/commit/${sha}`;
+const getCommitUrl = (sha) => `${process.env["REPOSITORY_URL"]}/commit/${sha}`;
 const getDiffUrl = (head, commitSha) =>
-  `${process.env['REPOSITORY_URL']}/compare/${head}...${commitSha}`;
+  `${process.env["REPOSITORY_URL"]}/compare/${head}...${commitSha}`;
 
-const getPayload = buildStatus => {
-  const title = buildStatus === 'success' ? `Build deployed` : `Build failed`;
-  const status = buildStatus === 'success' ? `deployed` : `failed to deploy`;
-  const color = buildStatus === 'success' ? 0x1f8b4c : 0x992d22;
+const getPayload = (buildStatus) => {
+  const title = buildStatus === "success" ? `Build deployed` : `Build failed`;
+  const status = buildStatus === "success" ? `deployed` : `failed to deploy`;
+  const color = buildStatus === "success" ? 0x1f8b4c : 0x992d22;
 
   const deployUrl =
-    process.env['CONTEXT'] === 'production'
-      ? process.env['URL']
-      : process.env['DEPLOY_URL'];
+    process.env["CONTEXT"] === "production"
+      ? process.env["URL"]
+      : process.env["DEPLOY_URL"];
 
   return {
     username: netlify.name,
@@ -41,37 +41,37 @@ const getPayload = buildStatus => {
         color,
         title,
         description: `[${
-          process.env['SITE_NAME']
-        }](${deployUrl}) ${status} at ${format(new Date(), 'HH:mm:ss')}.`,
+          process.env["SITE_NAME"]
+        }](${deployUrl}) ${status} at ${format(new Date(), "HH:mm:ss")}.`,
         fields: [
           {
-            name: 'Build ID',
-            value: process.env['BUILD_ID'],
+            name: "Build ID",
+            value: process.env["BUILD_ID"],
           },
           {
-            name: 'Context',
-            value: process.env['CONTEXT'],
+            name: "Context",
+            value: process.env["CONTEXT"],
           },
           {
-            name: 'Branch',
-            value: process.env['BRANCH'],
+            name: "Branch",
+            value: process.env["BRANCH"],
           },
           {
-            name: 'Deployed Commit',
-            value: `[${process.env['COMMIT_REF']}](${getCommitUrl(
-              process.env['COMMIT_REF']
+            name: "Deployed Commit",
+            value: `[${process.env["COMMIT_REF"]}](${getCommitUrl(
+              process.env["COMMIT_REF"],
             )})`,
           },
           {
-            name: 'Diff',
+            name: "Diff",
             value: getDiffUrl(
-              process.env['CACHED_COMMIT_REF'],
-              process.env['COMMIT_REF']
+              process.env["CACHED_COMMIT_REF"],
+              process.env["COMMIT_REF"],
             ),
           },
           {
-            name: 'Logs',
-            value: `${netlify.appUrl}/deploys/${process.env['DEPLOY_ID']}`,
+            name: "Logs",
+            value: `${netlify.appUrl}/deploys/${process.env["DEPLOY_ID"]}`,
           },
         ],
       },
@@ -82,19 +82,19 @@ const getPayload = buildStatus => {
 export const Discord = {
   sendBuildReport: async (buildStatus, utils) => {
     try {
-      const webhook = process.env['DISCORD_WEBHOOK_URL'];
+      const webhook = process.env["DISCORD_WEBHOOK_URL"];
       if (!webhook) {
-        console.log('No webhook set. Skipping.');
+        console.log("No webhook set. Skipping.");
         return;
       }
       await axios.post(webhook, getPayload(buildStatus));
 
       switch (buildStatus) {
         case BuildStatus.ERROR:
-          console.log('Build status (fail) sent to Discord');
+          console.log("Build status (fail) sent to Discord");
           break;
         case BuildStatus.SUCCESS:
-          console.log('Build status (success) sent to Discord');
+          console.log("Build status (success) sent to Discord");
           break;
       }
     } catch (err) {
