@@ -41,10 +41,10 @@ package = "netlify-plugin-discord-notifier"
     username = "My Bot"
 ```
 
-| Key       | Type   | Default                                                |
-|-----------|--------|--------------------------------------------------------|
-| username  | String | Netlify                                                |
-| avatarUrl | String | https://www.netlify.com/v3/static/favicon/icon-512.png |
+| Key       | Type   | Default                                                  |
+|-----------|--------|----------------------------------------------------------|
+| username  | String | `Netlify`                                                |
+| avatarUrl | String | `https://www.netlify.com/v3/static/favicon/icon-512.png` |
 
 #### Event bound configuration
 
@@ -60,17 +60,18 @@ package = "netlify-plugin-discord-notifier"
     disabled = false
 ```
 
-| Key         | Type      | Comment                                                                                                        |
-|-------------|-----------|----------------------------------------------------------------------------------------------------------------|
-| disabled    | Boolean   |                                                                                                                |
-| title       | String    |                                                                                                                |
-| status      | String    |                                                                                                                |
-| color       | Hex color | Use [Discord.js doc](https://discord.js.org/docs/packages/discord.js/main/Colors:Variable) for color reference |
-| showBuildId | Boolean   |                                                                                                                |
-| showContext | Boolean   |                                                                                                                |
-| showBranch  | Boolean   |                                                                                                                |
-| showCommit  | Boolean   |                                                                                                                |
-| showDiff    | Boolean   |                                                                                                                |
-| showLogs    | Boolean   |                                                                                                                |
+| Key                | Type      | Comment                                                                                                        |
+|--------------------|-----------|----------------------------------------------------------------------------------------------------------------|
+| disabled           | Boolean   |                                                                                                                |
+| title              | String    |                                                                                                                |
+| status             | String    |                                                                                                                |
+| color              | Hex color | Use [Discord.js doc](https://discord.js.org/docs/packages/discord.js/main/Colors:Variable) for color reference |
+| showBuildId        | Boolean   |                                                                                                                |
+| showContext        | Boolean   |                                                                                                                |
+| showBranch         | Boolean   |                                                                                                                |
+| showCommit         | Boolean   |                                                                                                                |
+| showDiff           | Boolean   |                                                                                                                |
+| showLogs           | Boolean   |                                                                                                                |
+| customWebhookKey   | String    | Use it for custom env variable key (e.g. defining different webhook per event type)                            |
 
 A default configuration is provided for each event (e.g. disabling notification for preDev and dev events) and available in [config.js](/src/config.js).
