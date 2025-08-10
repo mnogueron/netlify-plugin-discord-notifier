@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "prepare": "husky",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "semantic-release": "semantic-release"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
@@ -51,7 +52,11 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
+    "semantic-release": "^24.2.7",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.39.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

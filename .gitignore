@@ -34,3 +34,6 @@ yarn-error.log*
 
 # IntelliJ
 /.idea
+
+# Dist folder
+dist
