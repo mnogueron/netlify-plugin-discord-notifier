@@ -1,0 +1,33 @@
+{
+  "name": "netlify-plugin-discord-notifier",
+  "version": "0.0.1",
+  "description": "Netlify build plugin - Send build notifications to Discord",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "netlify",
+    "netlify-plugin",
+    "discord",
+    "notification",
+    "webhook"
+  ],
+  "files": [
+    "manifest.yml",
+    "src"
+  ],
+  "author": "Matthieu Nogueron <matthieu.nogueron@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mnogueron/netlify-plugin-discord-notifier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mnogueron/netlify-plugin-discord-notifier/issues"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "date-fns": "^4.1.0"
+  }
+}
