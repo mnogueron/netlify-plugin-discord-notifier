@@ -1,4 +1,4 @@
-import {Discord, BuildStatus} from './DiscordService';
+import {Discord, BuildStatus} from './DiscordService.js';
 
 export const onSuccess = async ({utils}) =>
     await Discord.sendBuildReport(BuildStatus.SUCCESS, utils)
