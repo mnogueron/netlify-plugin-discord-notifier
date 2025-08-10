@@ -1,6 +1,6 @@
 {
   "name": "netlify-plugin-discord-notifier",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Netlify build plugin - Send build notifications to Discord",
   "main": "src/index.js",
   "scripts": {
