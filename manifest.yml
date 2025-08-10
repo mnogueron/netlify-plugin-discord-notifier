@@ -1,1 +1,20 @@
 name: netlify-plugin-discord-notifier
+inputs:
+  - name: bot
+    description: Bot configuration
+  - name: success
+    description: Configuration for success notification
+  - name: error
+    description: Configuration for error notification
+  - name: preBuild
+    description: Configuration for preBuild notification
+  - name: build
+    description: Configuration for build notification
+  - name: postBuild
+    description: Configuration for postBuild notification
+  - name: end
+    description: Configuration for end notification
+  - name: preDev
+    description: Configuration for preDev notification
+  - name: dev
+    description: Configuration for dev notification
