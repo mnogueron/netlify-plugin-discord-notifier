@@ -49,8 +49,6 @@ export const getEmbed = (
     config,
   );
 
-  console.log(templateParameters);
-
   return {
     url: templateParameters.meta.appUrl,
     color: statusConfig.color,
