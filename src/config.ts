@@ -1,4 +1,4 @@
-import { Config, Inputs } from "./types.js";
+import type { Config, Inputs } from "./types";
 
 export const getConfig = (inputs: Inputs): Config => {
   return {

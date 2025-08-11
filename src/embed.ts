@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { EventConfig } from "./types.js";
+import type { EventConfig } from "./types";
 
 const getRepositoryUrl = () =>
   process.env["REPOSITORY_URL"]?.replace(/git@(github.com):/, "https://$1/");

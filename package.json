@@ -4,13 +4,21 @@
   "description": "Netlify build plugin - Send build notifications to Discord",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "dev": "rslib build --watch",
+    "build": "rslib build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "prepare": "husky",
     "watch": "tsc -w",
     "semantic-release": "semantic-release"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
@@ -44,6 +52,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@microsoft/api-extractor": "^7.52.10",
+    "@rslib/core": "^0.11.2",
     "@types/node": "^24.2.1",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",

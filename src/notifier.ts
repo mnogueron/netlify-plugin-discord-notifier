@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getEmbed } from "./embed.js";
-import { BuildEventParams, BuildStatus, Config } from "./types.js";
+import { getEmbed } from "./embed";
+import type { BuildEventParams, BuildStatus, Config } from "./types";
 
 const getPayload = (status: BuildStatus, config: Config) => {
   const statusConfig = config[status];
