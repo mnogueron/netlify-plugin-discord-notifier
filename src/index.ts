@@ -19,7 +19,7 @@ const discordNotifierPlugin = (inputs: Inputs) => {
 
   return Object.values(BuildStatus).reduce<Record<string, BuildEventHandler>>(
     (acc, status) => {
-      if (!config.success.disabled) {
+      if (!config[status].disabled) {
         acc[getEventFunction(status)] = notifier(status);
       }
       return acc;
