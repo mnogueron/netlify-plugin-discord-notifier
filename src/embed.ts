@@ -1,71 +1,61 @@
-import { format } from "date-fns";
-import type { EventConfig } from "./types";
+import {
+  type BuildEventParams,
+  Config,
+  EventConfig,
+  TemplateParameters,
+} from "./types";
+import { getTemplateParameters, renderString } from "./templates";
 
-const getRepositoryUrl = () =>
-  process.env["REPOSITORY_URL"]?.replace(/git@(github.com):/, "https://$1/");
-
-const getCommitUrl = (sha: string) => `${getRepositoryUrl()}/commit/${sha}`;
-
-const getDiffUrl = (head: string, commitSha: string) =>
-  `${getRepositoryUrl()}/compare/${head}...${commitSha}`;
-
-const getAppUrl = () => {
-  return `https://app.netlify.com/sites/${process.env["SITE_NAME"]}`;
-};
-
-const getDeployUrl = () => {
-  return process.env["CONTEXT"] === "production"
-    ? process.env["URL"]
-    : process.env["DEPLOY_URL"];
-};
-
-// TODO add support for string templating in raw string config (variable injection)
-const getDescription = (statusConfig: EventConfig) => {
-  return `[${
-    process.env["SITE_NAME"]
-  }](${getDeployUrl()}) ${statusConfig.status} at ${format(new Date(), "HH:mm:ss")}.`;
-};
-
-const getFields = (statusConfig: EventConfig) => {
+const getFields = (
+  statusConfig: EventConfig,
+  templateParameters: TemplateParameters,
+) => {
   return [
     statusConfig.showBuildId && {
       name: "Build ID",
-      value: process.env["BUILD_ID"],
+      value: renderString(statusConfig.templates.buildId, templateParameters),
     },
     statusConfig.showContext && {
       name: "Context",
-      value: process.env["CONTEXT"],
+      value: renderString(statusConfig.templates.context, templateParameters),
     },
     statusConfig.showBranch && {
       name: "Branch",
-      value: process.env["BRANCH"],
+      value: renderString(statusConfig.templates.branch, templateParameters),
     },
     statusConfig.showCommit && {
       name: "Deployed Commit",
-      value: `[${process.env["COMMIT_REF"]}](${getCommitUrl(
-        process.env["COMMIT_REF"] || "",
-      )})`,
+      value: renderString(statusConfig.templates.commit, templateParameters),
     },
     statusConfig.showDiff && {
       name: "Diff",
-      value: getDiffUrl(
-        process.env["CACHED_COMMIT_REF"] || "",
-        process.env["COMMIT_REF"] || "",
-      ),
+      value: renderString(statusConfig.templates.diff, templateParameters),
     },
     statusConfig.showLogs && {
       name: "Logs",
-      value: `${getAppUrl()}/deploys/${process.env["DEPLOY_ID"]}`,
+      value: renderString(statusConfig.templates.logs, templateParameters),
     },
   ].filter(Boolean);
 };
 
-export const getEmbed = (statusConfig: EventConfig) => {
+export const getEmbed = (
+  params: BuildEventParams,
+  statusConfig: EventConfig,
+  config: Config,
+) => {
+  const templateParameters = getTemplateParameters(
+    params,
+    statusConfig,
+    config,
+  );
+
+  console.log(templateParameters);
+
   return {
-    url: getAppUrl(),
+    url: templateParameters.meta.appUrl,
     color: statusConfig.color,
-    title: statusConfig.title,
-    description: getDescription(statusConfig),
-    fields: getFields(statusConfig),
+    title: renderString(statusConfig.title, templateParameters),
+    description: renderString(statusConfig.description, templateParameters),
+    fields: getFields(statusConfig, templateParameters),
   };
 };

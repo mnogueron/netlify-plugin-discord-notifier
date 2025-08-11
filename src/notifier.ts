@@ -2,12 +2,16 @@ import axios from "axios";
 import { getEmbed } from "./embed";
 import type { BuildEventParams, BuildStatus, Config } from "./types";
 
-const getPayload = (status: BuildStatus, config: Config) => {
+const getPayload = (
+  status: BuildStatus,
+  params: BuildEventParams,
+  config: Config,
+) => {
   const statusConfig = config[status];
   return {
     username: config.bot.username,
     avatar_url: config.bot.avatarUrl,
-    embeds: [getEmbed(statusConfig)],
+    embeds: [getEmbed(params, statusConfig, config)],
   };
 };
 
@@ -28,7 +32,7 @@ export const notify = async (
       return;
     }
 
-    await axios.post(webhook, getPayload(status, config));
+    await axios.post(webhook, getPayload(status, params, config));
 
     console.log(`Build status "${status}" sent to Discord`);
   } catch (err) {

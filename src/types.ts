@@ -9,10 +9,19 @@ export enum BuildStatus {
   DEV = "dev",
 }
 
-export type EventConfig = {
+export type Templates = {
+  buildId: string;
+  context: string;
+  branch: string;
+  commit: string;
+  diff: string;
+  logs: string;
+};
+
+type GlobalEventConfig = {
   disabled: boolean;
   title: string;
-  status: string;
+  description: string;
   color: number;
   showBuildId?: boolean;
   showContext?: boolean;
@@ -23,17 +32,58 @@ export type EventConfig = {
   customWebhookKey?: string;
 };
 
-export type Config = {
+export type EventConfig = GlobalEventConfig & {
+  templates: Templates;
+};
+
+export type BotConfig = {
   bot: {
     username: string;
     avatarUrl: string;
   };
-} & Record<BuildStatus, EventConfig>;
+};
 
-export type Inputs = Partial<Config>;
+export type Config = BotConfig & Record<BuildStatus, EventConfig>;
+
+export type Inputs = Partial<BotConfig> &
+  Partial<
+    Record<
+      BuildStatus,
+      Partial<GlobalEventConfig & { templates: Partial<Templates> }>
+    >
+  >;
 
 export type BuildEventParams = {
   inputs: Inputs;
+  constants: Record<string, string>;
+  netlifyConfig: Record<string, string>;
+  packageJson: Record<string, string>;
 };
 
+export type TemplateParameters = {
+  env: Record<string, unknown>;
+  config: Config;
+  statusConfig: EventConfig;
+  meta: {
+    appUrl: string;
+    time: string;
+    commitUrl: string;
+    deployUrl?: string;
+    diffUrl: string;
+    logsUrl: string;
+  };
+} & BuildEventParams;
+
 export type BuildEventHandler = (params: BuildEventParams) => void;
+
+export type EventHandlerKeys =
+  | "onPreBuild"
+  | "onBuild"
+  | "onPostBuild"
+  | "onError"
+  | "onSuccess"
+  | "onEnd"
+  | "onPreDev"
+  | "onDev";
+
+export type PluginReturn = Partial<Record<EventHandlerKeys, BuildEventHandler>>;
