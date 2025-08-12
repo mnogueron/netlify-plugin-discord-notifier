@@ -26,6 +26,11 @@ That's all you need to make this plugin work!
 
 ## Plugin configuration
 
+This plugin can either be configured via the `netlify.toml` file or via a `discord-notifier.config.js` or `discord-notifier.config.ts` file ([see here](#javascript--typescript-config-file))
+
+> [!IMPORTANT]
+> Note that `discord-notifier.config.js` and `discord-notifier.config.ts` will take precedence over any configuration done in `netlify.toml`
+
 ### Bot
 
 Add global bot configuration in your `netlify.toml` like so:
@@ -39,6 +44,8 @@ package = "netlify-plugin-discord-notifier"
     [plugins.inputs.bot]
     username = "My Bot"
 ```
+
+##### Available attributes
 
 | Key       | Type   | Default                                                  |
 |-----------|--------|----------------------------------------------------------|
@@ -78,8 +85,8 @@ type SupportedEventKeys =
 | Key              | Type      | Comment                                                                                                        |
 |------------------|-----------|----------------------------------------------------------------------------------------------------------------|
 | disabled         | Boolean   |                                                                                                                |
-| title            | Template  | See below on how to customise the title                                                                        |
-| description      | Template  | See below on how to customise the description                                                                  |
+| title            | Template  | See [here](#custom-messages) on how to customise the title                                                     |
+| description      | Template  | See [here](#custom-messages) on how to customise the description                                               |
 | color            | Hex color | Use [Discord.js doc](https://discord.js.org/docs/packages/discord.js/main/Colors:Variable) for color reference |
 | showBuildId      | Boolean   |                                                                                                                |
 | showContext      | Boolean   |                                                                                                                |
@@ -88,7 +95,8 @@ type SupportedEventKeys =
 | showDiff         | Boolean   |                                                                                                                |
 | showLogs         | Boolean   |                                                                                                                |
 | customWebhookKey | String    | Use it for custom env variable key (e.g. defining different webhook per event type)                            |
-| templates        | Templates | See below on how to customise templates                                                                        |
+| templates        | Templates | See [here](#custom-messages) on how to customise templates                                                     |
+| formatter        | Formatter | See [here](#fully-custom-webhook) for custom formatter                                                         |
 
 A default configuration is provided for each event (e.g. disabling notification for `preDev` and `dev` events) and available in [config.ts](/src/config.ts).
 
@@ -168,4 +176,65 @@ package = "netlify-plugin-discord-notifier"
 
     [plugins.inputs.preBuild.templates]
     branch = '<%= it.env["BRANCH"] %> - <% if (it.env["PULL_REQUEST"] !== "false") { %> PR <% } else { %> Not a PR <% } %>'
+```
+### Javascript / Typescript config file
+
+The same configuration can be defined within a `discord-notifier.config.js` or `discord-notifier.config.ts` file.
+
+```typescript
+// discord-notifier.config.ts
+import type {DiscordNotifierConfig} from 'netlify-plugin-discord-notifier';
+
+const config: DiscordNotifierConfig = {
+  postBuild: {
+    disabled: false,
+    title: 'Build passed flawlessly! 💯',
+    description: '[<%= it.env["SITE_NAME"] %>](<%= it.meta.deployUrl  %>) has finished building at <%= it.meta.time %>. Ship it! 🚢'
+  },
+  preBuild: {
+    disabled: false,
+    title: 'A new build has been launched! 🚀',
+    description: '[<%= it.env["SITE_NAME"] %>](<%= it.meta.deployUrl  %>) has started a new build at <%= it.meta.time %>. Let´s rock! 🤘🎸',
+    showBranch: true,
+    templates: {
+      branch: '<%= it.env["BRANCH"] %> - <% if (it.env["PULL_REQUEST"] !== "false") { %> PR <% } else { %> Not a PR <% } %>',
+    }
+  }
+}
+
+// Default export should contain the config object
+export default config;
+```
+
+### Fully custom webhook
+
+If that's not enough, you can simply use a `formatter` function on each event configuration and return the object you want to send.
+
+```typescript
+// discord-notifier.config.ts
+import type {
+  DiscordNotifierConfig,
+  BuildEventParams,
+  DiscordBody
+} from 'netlify-plugin-discord-notifier';
+
+const config: DiscordNotifierConfig = {
+  // ...
+  preBuild: {
+    disabled: false,
+    // ...
+    // Formatter overrides all other parameters
+    formatter: (params: BuildEventParams): DiscordBody => {
+      return {
+        username: 'My bot',
+        embeds: [{
+          title: 'Build is starting',
+          description: `I just need to know **${process.env["SITE_NAME"]}** started building`,
+        }],
+      }
+    }
+  }
+}
+
+export default config;
 ```
