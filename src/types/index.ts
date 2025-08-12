@@ -1,3 +1,7 @@
+import { DiscordBody } from "./Discord";
+
+export * from "./Discord";
+
 export enum BuildStatus {
   SUCCESS = "success",
   ERROR = "error",
@@ -18,43 +22,42 @@ export type Templates = {
   logs: string;
 };
 
-type GlobalEventConfig = {
+type BaseEventConfig = {
   disabled: boolean;
   title: string;
   description: string;
   color: number;
-  showBuildId?: boolean;
-  showContext?: boolean;
-  showBranch?: boolean;
-  showCommit?: boolean;
-  showDiff?: boolean;
-  showLogs?: boolean;
+  showBuildId: boolean;
+  showContext: boolean;
+  showBranch: boolean;
+  showCommit: boolean;
+  showDiff: boolean;
+  showLogs: boolean;
   customWebhookKey?: string;
+  formatter?: (params: BuildEventParams) => DiscordBody;
 };
 
-export type EventConfig = GlobalEventConfig & {
+export type EventConfig = BaseEventConfig & {
   templates: Templates;
 };
 
 export type BotConfig = {
-  bot: {
-    username: string;
-    avatarUrl: string;
-  };
+  username: string;
+  avatarUrl: string;
 };
 
-export type Config = BotConfig & Record<BuildStatus, EventConfig>;
+export type Config = { bot: BotConfig } & Record<BuildStatus, EventConfig>;
 
-export type Inputs = Partial<BotConfig> &
+export type DiscordNotifierConfig = Partial<{ bot: BotConfig }> &
   Partial<
     Record<
       BuildStatus,
-      Partial<GlobalEventConfig & { templates: Partial<Templates> }>
+      Partial<BaseEventConfig & { templates: Partial<Templates> }>
     >
   >;
 
 export type BuildEventParams = {
-  inputs: Inputs;
+  inputs: DiscordNotifierConfig;
   constants: Record<string, string>;
   netlifyConfig: Record<string, string>;
   packageJson: Record<string, string>;

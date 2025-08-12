@@ -1,19 +1,21 @@
 import { notify } from "./notifier";
-import { getConfig } from "./config";
 import { BuildStatus } from "./types";
 import type {
   BuildEventParams,
-  Inputs,
+  DiscordNotifierConfig,
   PluginReturn,
   BuildEventHandler,
   EventHandlerKeys,
 } from "./types";
+import { loadConfig } from "./config-loader";
 
-export const discordNotifier = (inputs: Inputs): PluginReturn => {
-  const config = getConfig(inputs);
+export const discordNotifier = async (
+  inputs: DiscordNotifierConfig,
+): Promise<PluginReturn> => {
+  const config = await loadConfig(inputs);
 
   const notifier = (status: BuildStatus) => (params: BuildEventParams) =>
-    notify(status, params, config);
+    notify(params, status, config);
 
   const handlers: Record<EventHandlerKeys, false | BuildEventHandler> = {
     onSuccess: !config.success.disabled && notifier(BuildStatus.SUCCESS),
