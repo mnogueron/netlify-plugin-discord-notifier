@@ -13,7 +13,6 @@ export const discordNotifier = async (
   inputs: DiscordNotifierConfig,
 ): Promise<PluginReturn> => {
   const config = await loadConfig(inputs);
-  console.log(config);
 
   const notifier = (status: BuildStatus) => (params: BuildEventParams) =>
     notify(status, params, config);
