@@ -1,12 +1,17 @@
 import axios from "axios";
 import { getEmbed } from "./embed";
-import type { BuildEventParams, BuildStatus, Config } from "./types";
+import type {
+  BuildEventParams,
+  BuildStatus,
+  Config,
+  DiscordBody,
+} from "./types";
 
 const getPayload = (
   status: BuildStatus,
   params: BuildEventParams,
   config: Config,
-) => {
+): DiscordBody => {
   const statusConfig = config[status];
   return {
     username: config.bot.username,

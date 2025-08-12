@@ -1,15 +1,18 @@
-import {
-  type BuildEventParams,
+import { getTemplateParameters, renderString } from "./templates";
+import { truthy } from "./utils";
+import type {
+  BuildEventParams,
   Config,
   EventConfig,
   TemplateParameters,
+  Embed,
+  EmbedField,
 } from "./types";
-import { getTemplateParameters, renderString } from "./templates";
 
 const getFields = (
   statusConfig: EventConfig,
   templateParameters: TemplateParameters,
-) => {
+): EmbedField[] => {
   return [
     statusConfig.showBuildId && {
       name: "Build ID",
@@ -35,14 +38,14 @@ const getFields = (
       name: "Logs",
       value: renderString(statusConfig.templates.logs, templateParameters),
     },
-  ].filter(Boolean);
+  ].filter(truthy);
 };
 
 export const getEmbed = (
   params: BuildEventParams,
   statusConfig: EventConfig,
   config: Config,
-) => {
+): Embed => {
   const templateParameters = getTemplateParameters(
     params,
     statusConfig,
