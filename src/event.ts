@@ -15,7 +15,7 @@ export const discordNotifier = async (
   const config = await loadConfig(inputs);
 
   const notifier = (status: BuildStatus) => (params: BuildEventParams) =>
-    notify(status, params, config);
+    notify(params, status, config);
 
   const handlers: Record<EventHandlerKeys, false | BuildEventHandler> = {
     onSuccess: !config.success.disabled && notifier(BuildStatus.SUCCESS),

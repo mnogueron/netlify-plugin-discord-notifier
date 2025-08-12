@@ -1,3 +1,5 @@
+import { DiscordBody } from "./Discord";
+
 export * from "./Discord";
 
 export enum BuildStatus {
@@ -20,7 +22,7 @@ export type Templates = {
   logs: string;
 };
 
-type GlobalEventConfig = {
+type BaseEventConfig = {
   disabled: boolean;
   title: string;
   description: string;
@@ -32,9 +34,10 @@ type GlobalEventConfig = {
   showDiff: boolean;
   showLogs: boolean;
   customWebhookKey?: string;
+  formatter?: (params: BuildEventParams) => DiscordBody;
 };
 
-export type EventConfig = GlobalEventConfig & {
+export type EventConfig = BaseEventConfig & {
   templates: Templates;
 };
 
@@ -49,7 +52,7 @@ export type DiscordNotifierConfig = Partial<{ bot: BotConfig }> &
   Partial<
     Record<
       BuildStatus,
-      Partial<GlobalEventConfig & { templates: Partial<Templates> }>
+      Partial<BaseEventConfig & { templates: Partial<Templates> }>
     >
   >;
 

@@ -8,16 +8,19 @@ import type {
 } from "./types";
 
 const getPayload = (
-  status: BuildStatus,
   params: BuildEventParams,
+  status: BuildStatus,
   config: Config,
 ): DiscordBody => {
   const statusConfig = config[status];
-  return {
-    username: config.bot.username,
-    avatar_url: config.bot.avatarUrl,
-    embeds: [getEmbed(params, statusConfig, config)],
-  };
+
+  return statusConfig.formatter
+    ? statusConfig.formatter(params)
+    : {
+        username: config.bot.username,
+        avatar_url: config.bot.avatarUrl,
+        embeds: [getEmbed(params, statusConfig, config)],
+      };
 };
 
 const getWebhook = (status: BuildStatus, config: Config) => {
@@ -26,8 +29,8 @@ const getWebhook = (status: BuildStatus, config: Config) => {
 };
 
 export const notify = async (
-  status: BuildStatus,
   params: BuildEventParams,
+  status: BuildStatus,
   config: Config,
 ) => {
   try {
@@ -37,7 +40,7 @@ export const notify = async (
       return;
     }
 
-    await axios.post(webhook, getPayload(status, params, config));
+    await axios.post(webhook, getPayload(params, status, config));
 
     console.log(`Build status "${status}" sent to Discord`);
   } catch (err) {
