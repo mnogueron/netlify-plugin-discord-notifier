@@ -23,12 +23,12 @@ type GlobalEventConfig = {
   title: string;
   description: string;
   color: number;
-  showBuildId?: boolean;
-  showContext?: boolean;
-  showBranch?: boolean;
-  showCommit?: boolean;
-  showDiff?: boolean;
-  showLogs?: boolean;
+  showBuildId: boolean;
+  showContext: boolean;
+  showBranch: boolean;
+  showCommit: boolean;
+  showDiff: boolean;
+  showLogs: boolean;
   customWebhookKey?: string;
 };
 
@@ -37,15 +37,13 @@ export type EventConfig = GlobalEventConfig & {
 };
 
 export type BotConfig = {
-  bot: {
-    username: string;
-    avatarUrl: string;
-  };
+  username: string;
+  avatarUrl: string;
 };
 
-export type Config = BotConfig & Record<BuildStatus, EventConfig>;
+export type Config = { bot: BotConfig } & Record<BuildStatus, EventConfig>;
 
-export type Inputs = Partial<BotConfig> &
+export type DiscordNotifierConfig = Partial<{ bot: BotConfig }> &
   Partial<
     Record<
       BuildStatus,
@@ -54,7 +52,7 @@ export type Inputs = Partial<BotConfig> &
   >;
 
 export type BuildEventParams = {
-  inputs: Inputs;
+  inputs: DiscordNotifierConfig;
   constants: Record<string, string>;
   netlifyConfig: Record<string, string>;
   packageJson: Record<string, string>;

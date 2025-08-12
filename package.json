@@ -38,7 +38,9 @@
   "dependencies": {
     "axios": "^1.11.0",
     "date-fns": "^4.1.0",
-    "eta": "^3.5.0"
+    "deepmerge-ts": "^7.1.5",
+    "eta": "^3.5.0",
+    "jiti": "^2.5.1"
   },
   "engines": {
     "node": ">=18.14.0"
